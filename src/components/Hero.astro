@@ -1,0 +1,196 @@
+---
+
+---
+
+<section class="hero" id="hero">
+  <div class="hero-bg">
+    <div class="hero-grid"></div>
+    <div class="hero-glow hero-glow--blue"></div>
+    <div class="hero-glow hero-glow--red"></div>
+  </div>
+
+  <div class="hero-content hero-content--split">
+    <!-- Left: Text Content -->
+    <div class="hero-text">
+      <div class="hero-eyebrow">
+        WELCOME TO MY PORTFOLIO
+      </div>
+
+      <h1 class="hero-title">
+        RAHALSA<br />
+        ABI <span class="highlight">UMARA</span>
+      </h1>
+
+      <div class="hero-roles">
+        <span class="hero-role-text" id="hero-role-text"></span>
+        <span class="hero-cursor"></span>
+      </div>
+
+      <div class="hero-stripe">
+        <div class="m-stripe m-stripe--medium">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+      </div>
+
+      <div class="hero-actions">
+        <a href="#projects" class="btn btn-primary">VIEW PROJECTS</a>
+        <a href="#contact" class="btn btn-outline">GET IN TOUCH</a>
+      </div>
+    </div>
+
+    <!-- Right: Image Slideshow -->
+    <div class="hero-photos" id="hero-photos">
+      <div class="hero-photos-frame">
+        <!-- Decorative accent lines -->
+        <div class="hero-photos-accent hero-photos-accent--top"></div>
+        <div class="hero-photos-accent hero-photos-accent--bottom"></div>
+
+        <!-- Image container with crossfade -->
+        <div class="hero-photos-stack">
+          <img
+            src="/hero-photo-1.png"
+            alt="Rahalsa Abi Umara - Pose 1"
+            class="hero-photo hero-photo--active"
+            id="hero-photo-1"
+          />
+          <img
+            src="/hero-photo-2.png"
+            alt="Rahalsa Abi Umara - Pose 2"
+            class="hero-photo"
+            id="hero-photo-2"
+          />
+          <img
+            src="/hero-photo-3.png"
+            alt="Rahalsa Abi Umara - Pose 3"
+            class="hero-photo"
+            id="hero-photo-3"
+          />
+        </div>
+
+        <!-- M-stripe accent at bottom -->
+        <div class="hero-photos-stripe">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+      </div>
+
+      <!-- Floating indicator dots -->
+      <div class="hero-photos-dots">
+        <button class="hero-dot hero-dot--active" id="hero-dot-0" aria-label="Photo 1"></button>
+        <button class="hero-dot" id="hero-dot-1" aria-label="Photo 2"></button>
+      </div>
+    </div>
+  </div>
+
+  <div class="hero-scroll-indicator">
+    <span>SCROLL</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<script>
+  // Typing animation
+  const roles = [
+    'Machine Learning Enthusiast',
+    'Software Developer',
+    'Data Analyst'
+  ];
+
+  const roleEl = document.getElementById('hero-role-text');
+  let roleIndex = 0;
+  let charIndex = 0;
+  let isDeleting = false;
+  let typingSpeed = 80;
+
+  function typeRole() {
+    if (!roleEl) return;
+
+    const currentRole = roles[roleIndex];
+
+    if (isDeleting) {
+      roleEl.textContent = currentRole.substring(0, charIndex - 1);
+      charIndex--;
+      typingSpeed = 40;
+    } else {
+      roleEl.textContent = currentRole.substring(0, charIndex + 1);
+      charIndex++;
+      typingSpeed = 80;
+    }
+
+    if (!isDeleting && charIndex === currentRole.length) {
+      typingSpeed = 2000; // Pause at end
+      isDeleting = true;
+    } else if (isDeleting && charIndex === 0) {
+      isDeleting = false;
+      roleIndex = (roleIndex + 1) % roles.length;
+      typingSpeed = 500; // Pause before next word
+    }
+
+    setTimeout(typeRole, typingSpeed);
+  }
+
+  typeRole();
+
+  // Hero Photo Slideshow with Crossfade
+  const photos = [
+    document.getElementById('hero-photo-1'),
+    document.getElementById('hero-photo-2'),
+    document.getElementById('hero-photo-3')
+  ];
+  const dots = [
+    document.getElementById('hero-dot-0'),
+    document.getElementById('hero-dot-1'),
+    document.getElementById('hero-dot-2')
+  ];
+
+  let currentPhoto = 0;
+  let slideInterval;
+
+  function switchPhoto(index) {
+    // Remove active from all
+    photos.forEach((photo) => {
+      photo?.classList.remove('hero-photo--active');
+      photo?.classList.add('hero-photo--exit');
+    });
+    dots.forEach((dot) => dot?.classList.remove('hero-dot--active'));
+
+    // Activate the target
+    photos[index]?.classList.add('hero-photo--active');
+    photos[index]?.classList.remove('hero-photo--exit');
+    dots[index]?.classList.add('hero-dot--active');
+
+    currentPhoto = index;
+  }
+
+  function nextPhoto() {
+    const next = (currentPhoto + 1) % photos.length;
+    switchPhoto(next);
+  }
+
+  // Auto-play slideshow
+  function startSlideshow() {
+    slideInterval = setInterval(nextPhoto, 4000);
+  }
+
+  // Dot click handlers
+  dots.forEach((dot, i) => {
+    dot?.addEventListener('click', () => {
+      clearInterval(slideInterval);
+      switchPhoto(i);
+      startSlideshow();
+    });
+  });
+
+  // Entrance animation
+  const heroPhotos = document.getElementById('hero-photos');
+  if (heroPhotos) {
+    setTimeout(() => {
+      heroPhotos.classList.add('hero-photos--visible');
+    }, 600);
+  }
+
+  startSlideshow();
+</script>
